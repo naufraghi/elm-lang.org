@@ -10,6 +10,13 @@ function compile()
 	refreshImports();
 }
 
+// SHARE
+
+function share()
+{
+	var code = editor.doc.getValue();
+	window.top.location.hash = "#" + encodeURIComponent(code);
+}
 
 // SETUP CODEMIRROR
 
@@ -19,6 +26,8 @@ function initEditor()
 	var controls = Elm.EditorControls.embed(controlsDiv);
 	controls.ports.compile.subscribe(compile);
 	controls.ports.lights.subscribe(toggleTheme);
+	controls.ports.share.subscribe(share);
+	controls.ports.importShared.subscribe(importShared);
 
 	editor = CodeMirror.fromTextArea(document.getElementById('input'), {
 		lineNumbers: true,
@@ -46,7 +55,18 @@ function initEditor()
 		controls.ports.rawImports.send(imports);
 	};
 	refreshImports();
+	importShared();
 }
+
+
+function importShared() {
+	var code = decodeURIComponent(window.top.location.hash);
+	if (code.length > 1 && code.substr(0, 1) === "#") {
+		code = code.substr(1);
+		editor.setValue(code);
+	}
+}
+
 
 
 // TOKENS

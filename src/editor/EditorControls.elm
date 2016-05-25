@@ -35,6 +35,10 @@ port compile : () -> Cmd msg
 
 port lights : () -> Cmd msg
 
+port share : () -> Cmd msg
+
+port importShared : () -> Cmd msg
+
 
 
 
@@ -76,6 +80,8 @@ type Msg
   | CursorMove (Maybe String)
   | Compile
   | Lights
+  | Share
+  | ImportShared
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -124,6 +130,16 @@ update msg model =
       , lights ()
       )
 
+    Share ->
+      ( model
+      , share ()
+      )
+
+    ImportShared ->
+      ( model
+      , importShared ()
+      )
+
 
 
 -- VIEW
@@ -145,6 +161,18 @@ view {hints} =
         , onClick Lights
         ]
         [ text "Lights" ]
+    , div
+        [ class "button green"
+        , title "Get a sharable url"
+        , onClick Share
+        ]
+        [ text "Share" ]
+    , div
+        [ class "button green"
+        , title "Import a shared url"
+        , onClick ImportShared
+        ]
+        [ text "Import" ]
     ]
 
 
